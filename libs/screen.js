@@ -38,42 +38,61 @@ Screen.prototype.drawCircle = function (origin, radius, params) {
     this.cx.beginPath();
     var originPix = this.coords2pix(origin);
     this.cx.arc(originPix.x, originPix.y, this.scale * radius, 0, Math.PI * 2);
-    this.cx.fillStyle = params.color || '#F00';
-    this.cx.fill();
+
+    this._fillPath(params);
     if (params.strokeColor) {
-        this.cx.lineWidth   = params.lineWidth || 1;
-        this.cx.strokeStyle = params.strokeColor;
-        this.cx.stroke();
+        this._strokePath(params);
     }
 };
 
 
 Screen.prototype.drawLine = function (origin, vector, params) {
-    params = params || {};
     this.cx.beginPath();
     var originPix = this.coords2pix(origin);
     this.cx.moveTo(originPix.x, originPix.y);
     this.cx.lineTo(originPix.x + this.scale * vector.x, originPix.y - this.scale * vector.y);
+    
+    this._strokePath(params);
+};
+
+Screen.prototype._initPath = function (points) {
+    this.cx.beginPath();
+    
+    var originPix = this.coords2pix(points[0]);
+    
+    for (var i=0; i < points.length; i++) {
+        originPix = this.coords2pix(points[i]);
+        if (i === 0) {
+            this.cx.moveTo(originPix.x, originPix.y);
+        } else {
+            this.cx.lineTo(originPix.x, originPix.y);
+        }
+    };
+};
+
+Screen.prototype._strokePath = function (params) {
+    params = params || {};
+    this.cx.strokeStyle = params.strokeColor || params.color || '#000';
     this.cx.lineWidth   = this.scale * (typeof params.lineWidth === 'undefined' ? 2 : params.lineWidth);
-    this.cx.strokeStyle = params.color || '#F0F';
     this.cx.stroke();
+};
+
+Screen.prototype._fillPath = function (params) {
+    params = params || {};
+    this.cx.fillStyle = params.fillColor || params.color || '#000';
+    this.cx.fill();
 };
 
 
 Screen.prototype.drawLines = function (points, params) {
-    params = params || {};
-    
-    this.cx.beginPath();
-    
-    var originPix = this.coords2pix(points[0]);
-    this.cx.moveTo(originPix.x, originPix.y);
-    
-    for (var i=1; i < points.length; i++) {
-        originPix = this.coords2pix(points[i]);
-        this.cx.lineTo(originPix.x, originPix.y);
-    };
-    
-    this.cx.strokeStyle = params.color || '#000';
-    this.cx.lineWidth   = this.scale * (typeof params.lineWidth === 'undefined' ? 2 : params.lineWidth);
-    this.cx.stroke();
+    this._initPath(points);
+    this._strokePath(params);
+};
+
+
+Screen.prototype.drawPolygon = function (points, params) {
+    points.push(points[0]);
+    this._initPath(points);
+    this._strokePath(params);
+    this._fillPath(params);
 };

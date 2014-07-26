@@ -36,7 +36,7 @@ SnowBall.prototype.checkCollision = function () {
 
 
 SnowBall.prototype.render = function (screen) {
-    screen.drawCircle(this.pos, this.radius, {color: '#FFF', strokeColor: '#444'});
+    screen.drawCircle(this.pos, this.radius, {color: '#FFF', strokeColor: '#444', lineWidth: 0.15});
 };
 
 
