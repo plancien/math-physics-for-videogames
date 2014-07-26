@@ -27,27 +27,6 @@ game.on('mousemove', function (mousePos) {
 
 $(function () {
     
-    $('body').append('<button id="zoom">zoom</button>');
-    $('body').append('<button id="unzoom">unzoom</button>');
-    $('body').append('<button id="debug">debug</button>');
-    $('body').append('<button id="pause">pause</button>');
-    
-    $('#zoom').click(function () {
-        game.screen.scale *= 1.5;
-    });
-    
-    $('#unzoom').click(function () {
-        game.screen.scale /= 1.5;
-    });
-    
-    $('#debug').click(function () {
-        debug = !debug;
-    });
-    
-    $('#pause').click(function () {
-        game.togglePause();
-    });
-    
     game.screen.center = {
         x: 38,
         y: 15
@@ -59,6 +38,7 @@ $(function () {
     $('#canvas').click(function () {
         game.cannon.fire();
     });
+    
 });
 
 
